@@ -11,19 +11,24 @@ license: MIT
 /**
  * THREE.ObjectControls
  * @constructor
- * @param domElement - the renderer's dom element
  * @param camera - The camera.
+ * @param domElement - the renderer's dom element
  * @param objectToMove - the object to control.
  */
 
-THREE.ObjectControls = function (domElement, camera, objectToMove) {
+THREE.ObjectControls = function (camera, domElement, objectToMove) {
 
 	this.camera = camera;
 	this.objectToMove = objectToMove;
 	this.domElement = (domElement !== undefined) ? domElement : document;
 
+	var maxDistance = 15,
+		minDistance = 6,
+		zoomSpeed = 0.5,
+		rotationSpeed = 1;
+
 	this.setDistance = function (min, max) {
-		mindistance = min;
+		minDistance = min;
 		maxDistance = max;
 	};
 
@@ -34,11 +39,6 @@ THREE.ObjectControls = function (domElement, camera, objectToMove) {
 	this.setRotationSpeed = function (speed) {
 		rotationSpeed = speed;
 	};
-
-	var maxDistance = 15,
-		minDistance = 6,
-		zoomSpeed = 0.5,
-		rotationSpeed = 1;
 
 	var mouseFlags = {
 		MOUSEDOWN: 0,
@@ -131,6 +131,8 @@ THREE.ObjectControls = function (domElement, camera, objectToMove) {
 
 	function onTouchEnd(e) {
 		prevZoomDiff.X = null;
+		prevZoomDiff.Y = null;
+
 		// if you were zooming out, currentTouches is updated for each finger you leave up the screen
 		// so each time a finger leaves up the screen, currentTouches length is decreased of a unit.
 		// When you leave up both 2 fingers, currentTouches.length is 0, this means the zoomming phase is ended
@@ -166,11 +168,9 @@ THREE.ObjectControls = function (domElement, camera, objectToMove) {
 			if (prevZoomDiff && prevZoomDiff.X > 0 && prevZoomDiff.Y > 0) {
 				if ((curDiffX > prevZoomDiff.X) &&
 					(curDiffY > prevZoomDiff.Y) && (camera.position.z > minDistance)) {
-					// The distance between the two pointers has increased
 					// console.log("Pinch moving IN -> Zoom in", e);
 					zoomIn();
 				} else if (curDiffX < prevZoomDiff.X && camera.position.z < maxDistance && curDiffY < prevZoomDiff.Y) {
-					// The distance between the two pointers has decreased
 					// console.log("Pinch moving OUT -> Zoom out", e);
 					zoomOut();
 				}
@@ -181,6 +181,7 @@ THREE.ObjectControls = function (domElement, camera, objectToMove) {
 
 		} else if (currentTouches.length === 0) {
 			prevZoomDiff.X = null;
+			prevZoomDiff.Y = null;
 			// console.log("onTouchMove");
 			var deltaMove = {
 				x: e.touches[0].pageX - previousMousePosition.x,
