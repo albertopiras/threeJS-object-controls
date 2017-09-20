@@ -87,7 +87,6 @@
             camera.position.set(40, 5, 50);
             camera.position.z = 30;
 
-
             spotLight.position.set(15, 40, 35);
             spotLight.castShadow = true;
             spotLight.angle = Math.PI / 4;
@@ -122,9 +121,10 @@
             document.body.appendChild(renderer.domElement);
             renderer.setSize(window.innerWidth, window.innerHeight);
 
+            /** instantiate ObjectControls**/
             controls = new THREE.ObjectControls(camera, renderer.domElement, mshBox);
-            controls.setDistance(8, 200);
-            controls.setZoomSpeed(1);
+            controls.setDistance(8, 200); // set min - max distance for zoom
+            controls.setZoomSpeed(1); // set zoom speed
 
             window.addEventListener('resize', onResize, false);
 
