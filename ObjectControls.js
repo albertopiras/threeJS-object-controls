@@ -7,7 +7,6 @@ github: https://github.com/Alberto-
 license: MIT
 ----------------------------------------------------------*/
 
-
 /**
  * THREE.ObjectControls
  * @constructor

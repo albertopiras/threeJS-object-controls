@@ -6,7 +6,8 @@ ThreeJS module that allows you to rotate an Object(mesh) independently from the 
 
 ## Usage
 
-Include threeJS and ObjectControls.js
+Include threeJS and ObjectControls.js into your page
+
 ```   
 <script src="three.min.js"></script>
 <script src="ObjectControls.js"></script>
@@ -18,8 +19,10 @@ Create a new instance of Controls, passig 3 arguments:
 * the mesh to move
 
 ```
-var controls = new THREE.ObjectControls(camera, renderer.domElement, mshBox);
+var controls = new THREE.ObjectControls(camera, renderer.domElement, myMesh);
 ```
+
+see `index.html` file to see an example.
 
 ### Options
 
@@ -35,7 +38,7 @@ controls.setZoomSpeed(1); // set zoom speed
 controls.setRotationSpeed(1);
 ```
 
-### Version
+## Version
 1.0 
 
 ## License
