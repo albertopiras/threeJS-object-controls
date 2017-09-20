@@ -42,7 +42,7 @@ controls.setRotationSpeed(1);
 
 MIT 
 
-[view live example]: <https://github.com/Alberto-/threeJS-object-controls>
+[view live example]: <https://alberto-.github.io/threeJS-object-controls/>
 
 
 
