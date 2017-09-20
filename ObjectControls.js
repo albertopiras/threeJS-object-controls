@@ -65,12 +65,18 @@ THREE.ObjectControls = function (domElement, camera, objectToMove) {
 
 	/******************* Interaction Controls (rotate & zoom, desktop & mobile) - Start ************/
 	// MOUSE - move
-	this.domElement.addEventListener('mousedown', function(e) {
+	this.domElement.addEventListener('mousedown', mouseDown, false);
+	this.domElement.addEventListener('mousemove', mouseMove, false);
+	this.domElement.addEventListener('mouseup', mouseUp, false);
+	// MOUSE - zoom
+	this.domElement.addEventListener('wheel', wheel, false);
+
+	function mouseDown(e) {
 		isDragging = true;
 		flag = mouseFlags.MOUSEDOWN;
-	});
+	}
 
-	this.domElement.addEventListener('mousemove', function(e) {
+	function mouseMove(e) {
 		var deltaMove = {
 			x: e.offsetX - previousMousePosition.x,
 			y: e.offsetY - previousMousePosition.y
@@ -88,32 +94,23 @@ THREE.ObjectControls = function (domElement, camera, objectToMove) {
 			x: e.offsetX,
 			y: e.offsetY
 		};
-	});
+	}
 
-	this.domElement.addEventListener('mouseup', function(e) {
+	function mouseUp(e) {
 		isDragging = false;
 		if (flag === mouseFlags.MOUSEDOWN) {
 			closePalette();
 		}
 		else if (flag === mouseFlags.MOUSEMOVE) {
 		}
-	});
+	}
 
-	// MOUSE - zoom
-	this.domElement.addEventListener('wheel', function(e) {
+	function wheel(e) {
 		if (e.wheelDelta > 0 && camera.position.z > minDistance) {
 			zoomIn();
 		} else if (e.wheelDelta < 0 && camera.position.z < maxDistance) {
 			zoomOut();
 		}
-	}, false);
-
-	function zoomIn() {
-		camera.position.z -= zoomSpeed;
-	}
-
-	function zoomOut() {
-		camera.position.z += zoomSpeed;
 	}
 
 	// TOUCH - move
@@ -136,7 +133,6 @@ THREE.ObjectControls = function (domElement, camera, objectToMove) {
 		}
 		// console.log("onTouchStart");
 	}
-
 
 	function onTouchEnd(e) {
 		prevZoomDiff.X = null;
@@ -167,7 +163,7 @@ THREE.ObjectControls = function (domElement, camera, objectToMove) {
 		// If two pointers are down, check for pinch gestures
 		if (e.touches.length === 2) {
 			currentTouches = new Array(2);
-			console.log("onTouchZoom");
+			// console.log("onTouchZoom");
 			// Calculate the distance between the two pointers
 			var curDiffX = Math.abs(e.touches[0].clientX - e.touches[1].clientX);
 			var curDiffY = Math.abs(e.touches[0].clientY - e.touches[1].clientY);
@@ -190,7 +186,7 @@ THREE.ObjectControls = function (domElement, camera, objectToMove) {
 
 		} else if (currentTouches.length === 0) {
 			prevZoomDiff.X = null;
-			console.log("onTouchMove");
+			// console.log("onTouchMove");
 			var deltaMove = {
 				x: e.touches[0].pageX - previousMousePosition.x,
 				y: e.touches[0].pageY - previousMousePosition.y
@@ -207,4 +203,13 @@ THREE.ObjectControls = function (domElement, camera, objectToMove) {
 			};
 		}
 	}
+
+	function zoomIn() {
+		camera.position.z -= zoomSpeed;
+	}
+
+	function zoomOut() {
+		camera.position.z += zoomSpeed;
+	}
+
 };
