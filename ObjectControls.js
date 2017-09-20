@@ -98,11 +98,6 @@ THREE.ObjectControls = function (domElement, camera, objectToMove) {
 
 	function mouseUp(e) {
 		isDragging = false;
-		if (flag === mouseFlags.MOUSEDOWN) {
-			closePalette();
-		}
-		else if (flag === mouseFlags.MOUSEMOVE) {
-		}
 	}
 
 	function wheel(e) {
@@ -115,8 +110,8 @@ THREE.ObjectControls = function (domElement, camera, objectToMove) {
 
 	// TOUCH - move
 	this.domElement.addEventListener('touchstart', onTouchStart, false);
-	this.domElement.addEventListener('touchend', onTouchEnd, false);
 	this.domElement.addEventListener('touchmove', onTouchMove, false);
+	this.domElement.addEventListener('touchend', onTouchEnd, false);
 
 	function onTouchStart(e) {
 		e.preventDefault();
@@ -147,13 +142,13 @@ THREE.ObjectControls = function (domElement, camera, objectToMove) {
 		e.preventDefault();
 		if (flag === mouseFlags.MOUSEDOWN) {
 			// console.log("touchClick");
-			closePalette();
+			// you can invoke more other functions for animations and so on...
 		}
 		else if (flag === mouseFlags.MOUSEMOVE) {
 			// console.log("touch drag");
+			// you can invoke more other functions for animations and so on...
 		}
 		// console.log("onTouchEnd");
-
 	}
 
 	//TOUCH - Zoom
