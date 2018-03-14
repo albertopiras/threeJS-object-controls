@@ -2,8 +2,8 @@
 THREE.ObjectControls
 version: 1.0
 author: Alberto Piras
-email: a.piras@gmail.com
-github: https://github.com/Alberto-
+email: a.piras.ict@gmail.com
+github: https://github.com/albertopiras
 license: MIT
 ----------------------------------------------------------*/
 
