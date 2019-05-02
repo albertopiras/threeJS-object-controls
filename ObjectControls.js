@@ -1,6 +1,6 @@
 /* --------------------------------------------------------
 THREE.ObjectControls
-version: 1.0
+version: 1.1
 author: Alberto Piras
 email: a.piras.ict@gmail.com
 github: https://github.com/albertopiras
@@ -15,196 +15,223 @@ license: MIT
  * @param objectToMove - the object to control.
  */
 
-THREE.ObjectControls = function (camera, domElement, objectToMove) {
 
-	this.camera = camera;
-	this.objectToMove = objectToMove;
-	this.domElement = (domElement !== undefined) ? domElement : document;
+THREE.ObjectControls = function(camera, domElement, objectToMove) {
+  this.camera = camera;
+  this.objectToMove = objectToMove;
+  this.domElement = (domElement !== undefined) ? domElement : document;
 
-	var maxDistance = 15,
-		minDistance = 6,
-		zoomSpeed = 0.5,
-		rotationSpeed = 1;
+  this.setDistance = function(min, max) {
+    minDistance = min;
+    maxDistance = max;
+  };
 
-	this.setDistance = function (min, max) {
-		minDistance = min;
-		maxDistance = max;
+  this.setZoomSpeed = function(zoomSpeed) {
+    zoomSpeed = zoomSpeed;
+  };
+
+  this.setRotationSpeed = function(rotationSpeed) {
+    rotationSpeed = rotationSpeed;
+  };
+
+  this.enableVerticalRotation = function() {
+    verticalRotationEnabled = true;
+  };
+
+  this.disableVerticalRotation = function() {
+    verticalRotationEnabled = false;
+  };
+
+  this.enableHorizontalRotation = function() {
+    horizontalRotationEnabled = true;
+  };
+
+  this.disableHorizontalRotation = function() {
+    horizontalRotationEnabled = false;
 	};
 
-	this.setZoomSpeed = function (speed) {
-		zoomSpeed = speed;
-	};
+  /************* MOUSE Interaction Controls (rotate & zoom, desktop)
+   * ***************/
+  // MOUSE - move
+  this.domElement.addEventListener('mousedown', mouseDown, false);
+  this.domElement.addEventListener('mousemove', mouseMove, false);
+  this.domElement.addEventListener('mouseup', mouseUp, false);
 
-	this.setRotationSpeed = function (speed) {
-		rotationSpeed = speed;
-	};
+  // MOUSE - zoom
+  this.domElement.addEventListener('wheel', wheel, false);
 
-	var mouseFlags = {
-		MOUSEDOWN: 0,
-		MOUSEMOVE: 1
-	};
 
-	var flag;
-	var isDragging = false;
-	var previousMousePosition = {
-		x: 0,
-		y: 0
-	};
+  /************** TOUCH Interaction Controls (rotate & zoom, mobile)
+   * ************/
+  // TOUCH - move
+  this.domElement.addEventListener('touchstart', onTouchStart, false);
+  this.domElement.addEventListener('touchmove', onTouchMove, false);
+  this.domElement.addEventListener('touchend', onTouchEnd, false);
 
-	/**currentTouches
-	 * length 0 : no zoom
-	 * length 2 : is zoomming
-	 */
-	var currentTouches = [];
+  /********************* controls variables *************************/
 
-	var prevZoomDiff = {
-		X: null,
-		Y: null
-	};
+	// var MAX_X_ANGLE = Math.PI/2;
+	// var MAX_Y_ANGLE = Math.PI;
 
-	/******************* Interaction Controls (rotate & zoom, desktop & mobile) - Start ************/
-	// MOUSE - move
-	this.domElement.addEventListener('mousedown', mouseDown, false);
-	this.domElement.addEventListener('mousemove', mouseMove, false);
-	this.domElement.addEventListener('mouseup', mouseUp, false);
-	// MOUSE - zoom
-	this.domElement.addEventListener('wheel', wheel, false);
+  var maxAngleLimit = true;
+  var maxDistance = 15, minDistance = 6, zoomSpeed = 0.5, rotationSpeed = 1,
+      verticalRotationEnabled = false, horizontalRotationEnabled = true;
 
-	function mouseDown(e) {
-		isDragging = true;
-		flag = mouseFlags.MOUSEDOWN;
-	}
+  var mouseFlags = {MOUSEDOWN: 0, MOUSEMOVE: 1};
 
-	function mouseMove(e) {
-		var deltaMove = {
-			x: e.offsetX - previousMousePosition.x,
-			y: e.offsetY - previousMousePosition.y
-		};
+  var flag;
+  var isDragging = false;
+  var previousMousePosition = {x: 0, y: 0};
 
-		if (isDragging) {
-			if (deltaMove.x != 0) {
-				// console.log(deltaMove.x);
-				objectToMove.rotation.y += deltaMove.x / 200;
-				flag = mouseFlags.MOUSEMOVE;
-			}
-		}
+  /**currentTouches
+   * length 0 : no zoom
+   * length 2 : is zoomming
+   */
+  var currentTouches = [];
 
-		previousMousePosition = {
-			x: e.offsetX,
-			y: e.offsetY
-		};
-	}
+  var prevZoomDiff = {X: null, Y: null};
 
-	function mouseUp(e) {
-		isDragging = false;
-	}
+  /***************************** shared functions **********************/
 
-	function wheel(e) {
-		if (e.wheelDelta > 0 && camera.position.z > minDistance) {
-			zoomIn();
-		} else if (e.wheelDelta < 0 && camera.position.z < maxDistance) {
-			zoomOut();
-		}
-	}
+  function zoomIn() {
+    camera.position.z -= zoomSpeed;
+  }
 
-	// TOUCH - move
-	this.domElement.addEventListener('touchstart', onTouchStart, false);
-	this.domElement.addEventListener('touchmove', onTouchMove, false);
-	this.domElement.addEventListener('touchend', onTouchEnd, false);
+  function zoomOut() {
+    camera.position.z += zoomSpeed;
+  }
 
-	function onTouchStart(e) {
-		e.preventDefault();
-		flag = mouseFlags.MOUSEDOWN;
-		if (e.touches.length === 2) {
-			prevZoomDiff.X = Math.abs(e.touches[0].clientX - e.touches[1].clientX);
-			prevZoomDiff.Y = Math.abs(e.touches[0].clientY - e.touches[1].clientY);
-			currentTouches = new Array(2);
-		} else {
-			previousMousePosition = {
-				x: e.touches[0].pageX,
-				y: e.touches[0].pageY
-			};
-		}
-		// console.log("onTouchStart");
-	}
+  /******************  MOUSE interaction functions - desktop  *****/
+  function mouseDown(e) {
+    isDragging = true;
+    flag = mouseFlags.MOUSEDOWN;
+  }
 
-	function onTouchEnd(e) {
-		prevZoomDiff.X = null;
-		prevZoomDiff.Y = null;
+  function mouseMove(e) {
+    var deltaMove = {
+      x: e.offsetX - previousMousePosition.x,
+      y: e.offsetY - previousMousePosition.y
+    };
 
-		// if you were zooming out, currentTouches is updated for each finger you leave up the screen
-		// so each time a finger leaves up the screen, currentTouches length is decreased of a unit.
-		// When you leave up both 2 fingers, currentTouches.length is 0, this means the zoomming phase is ended
-		if (currentTouches.length > 0) {
-			currentTouches.pop();
-		} else {
-			currentTouches = [];
-		}
-		e.preventDefault();
-		if (flag === mouseFlags.MOUSEDOWN) {
-			// console.log("touchClick");
-			// you can invoke more other functions for animations and so on...
-		}
-		else if (flag === mouseFlags.MOUSEMOVE) {
-			// console.log("touch drag");
-			// you can invoke more other functions for animations and so on...
-		}
-		// console.log("onTouchEnd");
-	}
+    if (isDragging) {
+      if (horizontalRotationEnabled && deltaMove.x != 0) {
+        // console.info(deltaMove.x);
+        objectToMove.rotation.y += deltaMove.x / 200;
+        console.log(objectToMove.rotation.y);
+        flag = mouseFlags.MOUSEMOVE;
+      }
 
-	//TOUCH - Zoom
-	function onTouchMove(e) {
-		e.preventDefault();
-		flag = mouseFlags.MOUSEMOVE;
-		// If two pointers are down, check for pinch gestures
-		if (e.touches.length === 2) {
-			currentTouches = new Array(2);
-			// console.log("onTouchZoom");
-			// Calculate the distance between the two pointers
-			var curDiffX = Math.abs(e.touches[0].clientX - e.touches[1].clientX);
-			var curDiffY = Math.abs(e.touches[0].clientY - e.touches[1].clientY);
+      if (verticalRotationEnabled && deltaMove.y != 0) {
+        // console.info(deltaMove.x);
+        objectToMove.rotation.x += deltaMove.y / 200;
+        flag = mouseFlags.MOUSEMOVE;
+      }
+    }
 
-			if (prevZoomDiff && prevZoomDiff.X > 0 && prevZoomDiff.Y > 0) {
-				if ((curDiffX > prevZoomDiff.X) &&
-					(curDiffY > prevZoomDiff.Y) && (camera.position.z > minDistance)) {
-					// console.log("Pinch moving IN -> Zoom in", e);
-					zoomIn();
-				} else if (curDiffX < prevZoomDiff.X && camera.position.z < maxDistance && curDiffY < prevZoomDiff.Y) {
-					// console.log("Pinch moving OUT -> Zoom out", e);
-					zoomOut();
-				}
-			}
-			// Cache the distance for the next move event 
-			prevZoomDiff.X = curDiffX;
-			prevZoomDiff.Y = curDiffY;
+    previousMousePosition = {x: e.offsetX, y: e.offsetY};
+  }
 
-		} else if (currentTouches.length === 0) {
-			prevZoomDiff.X = null;
-			prevZoomDiff.Y = null;
-			// console.log("onTouchMove");
-			var deltaMove = {
-				x: e.touches[0].pageX - previousMousePosition.x,
-				y: e.touches[0].pageY - previousMousePosition.y
-			};
+  function mouseUp(e) {
+    isDragging = false;
+  }
 
-			if (deltaMove.x != 0) {
-				// console.log(deltaMove.x);
-				objectToMove.rotation.y += deltaMove.x / 150;
-			}
+  function wheel(e) {
+    if (e.wheelDelta > 0 && camera.position.z > minDistance) {
+      zoomIn();
+    } else if (e.wheelDelta < 0 && camera.position.z < maxDistance) {
+      zoomOut();
+    }
+  }
 
-			previousMousePosition = {
-				x: e.touches[0].pageX,
-				y: e.touches[0].pageY
-			};
-		}
-	}
+  /****************** TOUCH interaction functions - mobile  *****/
 
-	function zoomIn() {
-		camera.position.z -= zoomSpeed;
-	}
+  function onTouchStart(e) {
+    e.preventDefault();
+    flag = mouseFlags.MOUSEDOWN;
+    if (e.touches.length === 2) {
+      prevZoomDiff.X = Math.abs(e.touches[0].clientX - e.touches[1].clientX);
+      prevZoomDiff.Y = Math.abs(e.touches[0].clientY - e.touches[1].clientY);
+      currentTouches = new Array(2);
+    } else {
+      previousMousePosition = {x: e.touches[0].pageX, y: e.touches[0].pageY};
+    }
+    // console.info("onTouchStart");
+  }
 
-	function zoomOut() {
-		camera.position.z += zoomSpeed;
-	}
+  function onTouchEnd(e) {
+    prevZoomDiff.X = null;
+    prevZoomDiff.Y = null;
 
+    // if you were zooming out, currentTouches is updated for each finger you
+    // leave up the screen so each time a finger leaves up the screen,
+    // currentTouches length is decreased of a unit. When you leave up both 2
+    // fingers, currentTouches.length is 0, this means the zoomming phase is
+    // ended
+    if (currentTouches.length > 0) {
+      currentTouches.pop();
+    } else {
+      currentTouches = [];
+    }
+    e.preventDefault();
+    if (flag === mouseFlags.MOUSEDOWN) {
+      // console.info("touchClick");
+      // you can invoke more other functions for animations and so on...
+    } else if (flag === mouseFlags.MOUSEMOVE) {
+      // console.info("touch drag");
+      // you can invoke more other functions for animations and so on...
+    }
+    // console.info("onTouchEnd");
+  }
+
+  // TOUCH - rotation and zoom
+  function onTouchMove(e) {
+    e.preventDefault();
+    flag = mouseFlags.MOUSEMOVE;
+    // If two pointers are down, check for pinch gestures (ZOOM)
+    if (e.touches.length === 2) {
+      currentTouches = new Array(2);
+      // console.info("onTouchZoom");
+      // Calculate the distance between the two pointers
+      var curDiffX = Math.abs(e.touches[0].clientX - e.touches[1].clientX);
+      var curDiffY = Math.abs(e.touches[0].clientY - e.touches[1].clientY);
+
+      if (prevZoomDiff && prevZoomDiff.X > 0 && prevZoomDiff.Y > 0) {
+        if ((curDiffX > prevZoomDiff.X) && (curDiffY > prevZoomDiff.Y) &&
+            (camera.position.z > minDistance)) {
+          // console.info("Pinch moving IN -> Zoom in", e);
+          zoomIn();
+        } else if (
+            curDiffX < prevZoomDiff.X && camera.position.z < maxDistance &&
+            curDiffY < prevZoomDiff.Y) {
+          // console.info("Pinch moving OUT -> Zoom out", e);
+          zoomOut();
+        }
+      }
+      // Cache the distance for the next move event
+      prevZoomDiff.X = curDiffX;
+      prevZoomDiff.Y = curDiffY;
+
+      // ROTATE
+    } else if (currentTouches.length === 0) {
+      prevZoomDiff.X = null;
+      prevZoomDiff.Y = null;
+      // console.info("onTouchMove");
+      var deltaMove = {
+        x: e.touches[0].pageX - previousMousePosition.x,
+        y: e.touches[0].pageY - previousMousePosition.y
+      };
+
+      if (horizontalRotationEnabled && deltaMove.x != 0) {
+        // console.info(deltaMove.x);
+        objectToMove.rotation.y += deltaMove.x / 150;
+      }
+
+      if (verticalRotationEnabled && deltaMove.y != 0) {
+        // console.info(deltaMove.y);
+        objectToMove.rotation.x += deltaMove.y / 150;
+      }
+
+      previousMousePosition = {x: e.touches[0].pageX, y: e.touches[0].pageY};
+    }
+  }
 };

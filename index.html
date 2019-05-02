@@ -4,18 +4,23 @@
 <head>
     <title>three.js webgl - ObjectControls example</title>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <meta name="description" content="three.js webgl - ObjectControls example">
-    <meta name="keywords" content="threejs, three, object, controls, 3D, object rotation">
-    <meta name="author" content="Alberto Piras">
-    <meta name="contact" content="a.piras.ict@gmail.com">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="description"
+          content="three.js webgl - ObjectControls example">
+    <meta name="keywords"
+          content="threejs, three, object, controls, 3D, object rotation">
+    <meta name="author"
+          content="Alberto Piras">
+    <meta name="contact"
+          content="a.piras.ict@gmail.com">
     <style>
         body {
             background-color: #000;
             margin: 0px;
             overflow: hidden;
         }
-        
+
         #info {
             position: absolute;
             top: 0px;
@@ -26,12 +31,12 @@
             font-size: 13px;
             text-align: center;
         }
-        
+
         a {
             color: #ff0080;
             text-decoration: none;
         }
-        
+
         a:hover {
             color: #0080ff;
         }
@@ -41,9 +46,12 @@
 <body>
 
     <div id="info">
-        <a href="http://threejs.org" target="_blank">three.js</a> webgl - <a href="https://github.com/Alberto-/threeJS-object-controls"
-            target="_blank">ObjectControls</a> example, with spotlight by <a href="http://master-domain.com" target="_blank">Master James</a><br
-        />
+        <a href="http://threejs.org"
+           target="_blank">three.js</a> webgl - <a
+           href="https://github.com/Alberto-/threeJS-object-controls"
+           target="_blank">ObjectControls</a> example, with spotlight by <a
+           href="http://master-domain.com"
+           target="_blank">Master James</a><br />
     </div>
 
     <script src="libs/three.min.js"></script>
@@ -107,7 +115,7 @@
             mshFloor.position.set(0, - 0.05, 0);
 
             mshBox.castShadow = true;
-            mshBox.position.set(0, 1.8, 0);
+            mshBox.position.set(0, 2.3, 0);
 
             camera.lookAt(mshBox.position);
 
@@ -126,6 +134,7 @@
             controls = new THREE.ObjectControls(camera, renderer.domElement, mshBox);
             controls.setDistance(8, 200); // set min - max distance for zoom
             controls.setZoomSpeed(1); // set zoom speed
+            controls.enableVerticalRotation();
 
             window.addEventListener('resize', onResize, false);
 
