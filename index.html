@@ -75,6 +75,7 @@
 
         var mshFloor = new THREE.Mesh(geoFloor, matFloor);
         var mshBox = new THREE.Mesh(geoBox, matBox);
+        var mshBox2 = new THREE.Mesh(geoBox, matBox);
 
         var ambient = new THREE.AmbientLight(0xffffff, 0.1);
 
@@ -115,13 +116,16 @@
             mshFloor.position.set(0, - 0.05, 0);
 
             mshBox.castShadow = true;
-            mshBox.position.set(0, 2.3, 0);
+            mshBox2.castShadow = true;
+            mshBox.position.set(-3, 2.3, 3);
+            mshBox2.position.set(3, 2.3, 3);
 
             camera.lookAt(mshBox.position);
 
             scene.add(camera);
             scene.add(mshFloor);
             scene.add(mshBox);
+            scene.add(mshBox2);
             scene.add(ambient);
             scene.add(spotLight);
             scene.add(new THREE.AxisHelper(10));
@@ -135,6 +139,8 @@
             controls.setDistance(8, 200); // set min - max distance for zoom
             controls.setZoomSpeed(1); // set zoom speed
             controls.enableVerticalRotation();
+            controls.setMaxVerticalRotationAngle(Math.PI / 4, Math.PI / 4);
+            controls.setRotationSpeed(0.05);
 
             window.addEventListener('resize', onResize, false);
 
@@ -215,6 +221,18 @@
                 spotLight.decay = val;
 
             }, false, 1, 2);
+
+            var changeMeshConfig = {
+                useMesh1: function () {
+                    controls.setObjectToMove(mshBox);
+                },
+                useMesh2: function () {
+                    controls.setObjectToMove(mshBox2);
+                }
+            };
+            gui.add(changeMeshConfig, 'useMesh1');
+
+            gui.add(changeMeshConfig, 'useMesh2');
 
         }
 
