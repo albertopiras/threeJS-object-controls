@@ -175,7 +175,6 @@ THREE.ObjectControls = function(camera, domElement, objectToMove) {
   }
 
   function mouseMove(e) {
-		console.log(rotationSpeed);
     if (isDragging) {
       var deltaMove = {
         x: e.offsetX - previousMousePosition.x,
@@ -299,7 +298,6 @@ THREE.ObjectControls = function(camera, domElement, objectToMove) {
         x: e.touches[0].pageX - previousMousePosition.x,
         y: e.touches[0].pageY - previousMousePosition.y
       };
-			console.log(rotationSpeedTouchDevices);
       previousMousePosition = {x: e.touches[0].pageX, y: e.touches[0].pageY};
 
       if (horizontalRotationEnabled && deltaMove.x != 0) {
