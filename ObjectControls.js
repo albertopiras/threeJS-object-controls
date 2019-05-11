@@ -212,14 +212,14 @@ THREE.ObjectControls = function(camera, domElement, objectToMove) {
     resetMousePosition();
   }
 
-  function wheel(e) {
-    if (e.wheelDelta > 0 && camera.position.z > minDistance) {
+ function wheel(e) {
+    var delta = e.wheelDelta? e.wheelDelta : e.deltaY*-1;
+    if (delta > 0 && camera.position.z > minDistance) {
       zoomIn();
-    } else if (e.wheelDelta < 0 && camera.position.z < maxDistance) {
+    } else if (delta < 0 && camera.position.z < maxDistance) {
       zoomOut();
     }
   }
-
   /****************** TOUCH interaction functions - mobile  *****/
 
   function onTouchStart(e) {
