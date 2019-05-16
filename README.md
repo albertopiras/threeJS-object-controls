@@ -22,7 +22,7 @@ Create a new instance of Controls, passig 3 arguments:
 var controls = new THREE.ObjectControls(camera, renderer.domElement, myMesh);
 ```
 
-see `index.html` file to see an example.
+look at `index.html` to see a usage example.
 
 ### Options
 
