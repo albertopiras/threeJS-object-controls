@@ -137,7 +137,7 @@
             /** instantiate ObjectControls**/
             controls = new THREE.ObjectControls(camera, renderer.domElement, mshBox);
             controls.setDistance(8, 200); // set min - max distance for zoom
-            controls.setZoomSpeed(1); // set zoom speed
+            controls.setZoomSpeed(0.5); // set zoom speed
             controls.enableVerticalRotation();
             controls.setMaxVerticalRotationAngle(Math.PI / 4, Math.PI / 4);
             controls.setRotationSpeed(0.05);
