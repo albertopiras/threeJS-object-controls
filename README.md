@@ -22,7 +22,11 @@ Create a new instance of Controls, passig 3 arguments:
 var controls = new THREE.ObjectControls(camera, renderer.domElement, myMesh);
 ```
 
-look at `index.html` to see a usage example.
+look at `index.html` to see an usage example.
+
+You can also change the mesh you want rotate! :tada:
+
+[view live example] and click the 'useMesh2' button on the right panel to interact with the second cube.  
 
 ### Options
 
@@ -49,7 +53,9 @@ controls.disableMaxHorizontalAngleRotation()// disables rotation angle limits fo
 
 controls.setRotationSpeed(0.05); // sets a new rotation speed for desktop, see also setRotationSpeedTouchDevices(value)
 
- rotationSpeed:
+Parameters details:
+
+rotationSpeed:
  1 => fast
  0.01 => slow
 ```
