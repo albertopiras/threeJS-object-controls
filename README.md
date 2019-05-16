@@ -31,11 +31,23 @@ You can set different options like
 * rotation speed
 * zoom speed
 * min-max distance of the camera
+* mesh to rotate
+* enable disable axis rotations
+* set max rotation angle
+
 
 ```
 controls.setDistance(8, 200); // set min - max distance for zoom
+
 controls.setZoomSpeed(1); // set zoom speed
-controls.setRotationSpeed(1);
+
+controls.enableVerticalRotation(); // enables the vertical rotation, see also disableVerticalRotation(), enableHorizontalRotation(), disableHorizontalRotation()
+
+controls.setMaxVerticalRotationAngle(Math.PI / 4, Math.PI / 4); // sets a max angle value for the rotation of the object, see also setMaxHorizontalRotationAngle(R,R)
+
+controls.disableMaxHorizontalAngleRotation()// disables rotation angle limits for horizontal rotation, see also disableMaxVerticalAngleRotation()
+
+controls.setRotationSpeed(0.05); // sets a new rotation speed for desktop, see also setRotationSpeedTouchDevices(value)
 
  rotationSpeed:
  1 => fast
