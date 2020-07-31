@@ -25,7 +25,7 @@ Create a new instance of Controls, passig 3 arguments:
 ```
 var controls = new ObjectControls(camera, renderer.domElement, myMesh);
 ```
-look at the github repo to see an usage example.
+look at the [github example repo] to see an usage example.
 
 You can also change the mesh you want rotate! :tada:
 
@@ -90,3 +90,5 @@ In case of problems with ts types required by threejs in a typescript project do
 MIT
 
 [view live example]: <https://albertopiras.github.io/threeJS-object-controls/>
+
+[github example repo]: <https://github.com/albertopiras/object-controls-angular-example>
