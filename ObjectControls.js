@@ -312,3 +312,5 @@ function ObjectControls(camera, domElement, objectToMove) {
     }
   }
 };
+
+export { ObjectControls };

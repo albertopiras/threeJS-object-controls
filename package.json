@@ -1,0 +1,22 @@
+{
+  "name": "threejs-object-controls",
+  "version": "1.2",
+  "description": "module for ThreeJS that allows you to rotate an Object(mesh) independently from the rest of the scene, and to zoom in/out moving the camera.",
+  "main": "ObjectControls.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/albertopiras/threeJS-object-controls.git"
+  },
+  "keywords": [
+    "threejs"
+  ],
+  "author": "Alberto Piras",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/albertopiras/threeJS-object-controls/issues"
+  },
+  "homepage": "https://github.com/albertopiras/threeJS-object-controls#readme"
+}
