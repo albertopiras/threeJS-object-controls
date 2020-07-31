@@ -1,4 +1,5 @@
 # ThreeJS Object Controls
+[![NPM Package][npm]][https://www.npmjs.com/package/threejs-object-controls]
 
 ThreeJS module that allows you to rotate an Object(mesh) independently from the rest of the scene, and to zoom in/out moving the camera.
 
