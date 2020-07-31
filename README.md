@@ -19,7 +19,7 @@ Create a new instance of Controls, passig 3 arguments:
 * the mesh to move
 
 ```
-var controls = new THREE.ObjectControls(camera, renderer.domElement, myMesh);
+var controls = new ObjectControls(camera, renderer.domElement, myMesh);
 ```
 
 look at `index.html` to see an usage example.

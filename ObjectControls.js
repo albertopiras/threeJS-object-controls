@@ -1,78 +1,80 @@
 /* --------------------------------------------------------
 THREE.ObjectControls
-version: 1.1
+version: 1.2
 author: Alberto Piras
 email: a.piras.ict@gmail.com
 github: https://github.com/albertopiras
 license: MIT
+description: module for ThreeJS that allows you to rotate an Object(mesh) independently from the rest of the scene, and to zoom in/out moving the camera; for desktop and mobile.
 ----------------------------------------------------------*/
 
 /**
- * THREE.ObjectControls
+ * ObjectControls
  * @constructor
  * @param camera - The camera.
  * @param domElement - the renderer's dom element
  * @param objectToMove - the object to control.
  */
 
-THREE.ObjectControls = function(camera, domElement, objectToMove) {
-  mesh = objectToMove;
+function ObjectControls(camera, domElement, objectToMove) {
+
+  let mesh = objectToMove;
   domElement = (domElement !== undefined) ? domElement : document;
 
-  this.setObjectToMove = function(newMesh) {
+  this.setObjectToMove = function (newMesh) {
     mesh = newMesh;
   };
 
-  this.setDistance = function(min, max) {
+  this.setDistance = function (min, max) {
     minDistance = min;
     maxDistance = max;
   };
 
-  this.setZoomSpeed = function(newZoomSpeed) {
+  this.setZoomSpeed = function (newZoomSpeed) {
     zoomSpeed = newZoomSpeed;
   };
 
-  this.setRotationSpeed = function(newRotationSpeed) {
+  this.setRotationSpeed = function (newRotationSpeed) {
     rotationSpeed = newRotationSpeed;
   };
 
-  this.setRotationSpeedTouchDevices = function(newRotationSpeed) {
+  this.setRotationSpeedTouchDevices = function (newRotationSpeed) {
     rotationSpeedTouchDevices = newRotationSpeed;
   };
 
-  this.enableVerticalRotation = function() {
+  this.enableVerticalRotation = function () {
     verticalRotationEnabled = true;
   };
 
-  this.disableVerticalRotation = function() {
+  this.disableVerticalRotation = function () {
     verticalRotationEnabled = false;
   };
 
-  this.enableHorizontalRotation = function() {
+  this.enableHorizontalRotation = function () {
     horizontalRotationEnabled = true;
   };
 
-  this.disableHorizontalRotation = function() {
+  this.disableHorizontalRotation = function () {
     horizontalRotationEnabled = false;
   };
 
-  this.setMaxVerticalRotationAngle = function(min, max) {
+  this.setMaxVerticalRotationAngle = function (min, max) {
     MAX_ROTATON_ANGLES.x.from = min;
     MAX_ROTATON_ANGLES.x.to = max;
     MAX_ROTATON_ANGLES.x.enabled = true;
   };
 
-  this.setMaxHorizontalRotationAngle = function(min, max) {
+  this.setMaxHorizontalRotationAngle = function (min, max) {
     MAX_ROTATON_ANGLES.y.from = min;
     MAX_ROTATON_ANGLES.y.to = max;
     MAX_ROTATON_ANGLES.y.enabled = true;
   };
 
-  this.disableMaxHorizontalAngleRotation = function() {
+  this.disableMaxHorizontalAngleRotation = function () {
     MAX_ROTATON_ANGLES.y.enabled = false;
   };
 
-  this.disableMaxVerticalAngleRotation = function() {
+  this.disableMaxVerticalAngleRotation = function () {
     MAX_ROTATON_ANGLES.x.enabled = false;
   };
 
@@ -115,14 +117,14 @@ THREE.ObjectControls = function(camera, domElement, objectToMove) {
    * 0.01 = slow
    * */
   var maxDistance = 15, minDistance = 6, zoomSpeed = 0.5, rotationSpeed = 0.05,
-      rotationSpeedTouchDevices = 0.05, verticalRotationEnabled = false,
-      horizontalRotationEnabled = true;
+    rotationSpeedTouchDevices = 0.05, verticalRotationEnabled = false,
+    horizontalRotationEnabled = true;
 
-  var mouseFlags = {MOUSEDOWN: 0, MOUSEMOVE: 1};
+  var mouseFlags = { MOUSEDOWN: 0, MOUSEMOVE: 1 };
 
   var flag;
   var isDragging = false;
-  var previousMousePosition = {x: 0, y: 0};
+  var previousMousePosition = { x: 0, y: 0 };
 
   /**
    * CurrentTouches
@@ -131,7 +133,7 @@ THREE.ObjectControls = function(camera, domElement, objectToMove) {
    */
   var currentTouches = [];
 
-  var prevZoomDiff = {X: null, Y: null};
+  var prevZoomDiff = { X: null, Y: null };
 
   /***************************** shared functions **********************/
 
@@ -156,15 +158,15 @@ THREE.ObjectControls = function(camera, domElement, objectToMove) {
   function isWithinMaxAngle(delta, axe) {
     if (MAX_ROTATON_ANGLES[axe].enabled) {
       var condition = ((MAX_ROTATON_ANGLES[axe].from * -1) <
-                       (mesh.rotation[axe] + delta)) &&
-          ((mesh.rotation[axe] + delta) < MAX_ROTATON_ANGLES[axe].to);
+        (mesh.rotation[axe] + delta)) &&
+        ((mesh.rotation[axe] + delta) < MAX_ROTATON_ANGLES[axe].to);
       return condition ? true : false;
     }
     return true;
   }
 
   function resetMousePosition() {
-    previousMousePosition = {x: 0, y: 0};
+    previousMousePosition = { x: 0, y: 0 };
   }
 
   /******************  MOUSE interaction functions - desktop  *****/
@@ -180,7 +182,7 @@ THREE.ObjectControls = function(camera, domElement, objectToMove) {
         y: e.offsetY - previousMousePosition.y
       };
 
-      previousMousePosition = {x: e.offsetX, y: e.offsetY};
+      previousMousePosition = { x: e.offsetX, y: e.offsetY };
 
       if (horizontalRotationEnabled && deltaMove.x != 0)
       // && (Math.abs(deltaMove.x) > Math.abs(deltaMove.y))) {
@@ -229,7 +231,7 @@ THREE.ObjectControls = function(camera, domElement, objectToMove) {
       prevZoomDiff.Y = Math.abs(e.touches[0].clientY - e.touches[1].clientY);
       currentTouches = new Array(2);
     } else {
-      previousMousePosition = {x: e.touches[0].pageX, y: e.touches[0].pageY};
+      previousMousePosition = { x: e.touches[0].pageX, y: e.touches[0].pageY };
     }
   }
 
@@ -272,11 +274,11 @@ THREE.ObjectControls = function(camera, domElement, objectToMove) {
 
       if (prevZoomDiff && prevZoomDiff.X > 0 && prevZoomDiff.Y > 0) {
         if ((curDiffX > prevZoomDiff.X) && (curDiffY > prevZoomDiff.Y) &&
-            (camera.position.z > minDistance)) {
+          (camera.position.z > minDistance)) {
           zoomIn();
         } else if (
-            curDiffX < prevZoomDiff.X && camera.position.z < maxDistance &&
-            curDiffY < prevZoomDiff.Y) {
+          curDiffX < prevZoomDiff.X && camera.position.z < maxDistance &&
+          curDiffY < prevZoomDiff.Y) {
           zoomOut();
         }
       }
@@ -292,18 +294,18 @@ THREE.ObjectControls = function(camera, domElement, objectToMove) {
         x: e.touches[0].pageX - previousMousePosition.x,
         y: e.touches[0].pageY - previousMousePosition.y
       };
-      previousMousePosition = {x: e.touches[0].pageX, y: e.touches[0].pageY};
+      previousMousePosition = { x: e.touches[0].pageX, y: e.touches[0].pageY };
 
       if (horizontalRotationEnabled && deltaMove.x != 0) {
         if (!isWithinMaxAngle(
-                Math.sign(deltaMove.x) * rotationSpeedTouchDevices, 'y'))
+          Math.sign(deltaMove.x) * rotationSpeedTouchDevices, 'y'))
           return;
         mesh.rotation.y += Math.sign(deltaMove.x) * rotationSpeedTouchDevices;
       }
 
       if (verticalRotationEnabled && deltaMove.y != 0) {
         if (!isWithinMaxAngle(
-                Math.sign(deltaMove.y) * rotationSpeedTouchDevices, 'x'))
+          Math.sign(deltaMove.y) * rotationSpeedTouchDevices, 'x'))
           return;
         mesh.rotation.x += Math.sign(deltaMove.y) * rotationSpeedTouchDevices;
       }

@@ -44,7 +44,9 @@
 </head>
 
 <body>
-
+    <a href="https://github.com/albertopiras/threeJS-object-controls"><img width="149" height="149"
+        src="https://github.blog/wp-content/uploads/2008/12/forkme_left_green_007200.png?resize=149%2C149"
+        class="attachment-full size-full" alt="Fork me on GitHub" data-recalc-dims="1"></a>
     <div id="info">
         <a href="http://threejs.org"
            target="_blank">three.js</a> webgl - <a
@@ -56,6 +58,7 @@
 
     <script src="libs/three.min.js"></script>
     <script src="ObjectControls.js"></script>
+
     <script src="libs/dat.gui.min.js"></script>
     <script src="libs/Detector.js"></script>
 
@@ -135,7 +138,7 @@
             renderer.setSize(window.innerWidth, window.innerHeight);
 
             /** instantiate ObjectControls**/
-            controls = new THREE.ObjectControls(camera, renderer.domElement, mshBox);
+            controls = new ObjectControls(camera, renderer.domElement, mshBox);
             controls.setDistance(8, 200); // set min - max distance for zoom
             controls.setZoomSpeed(0.5); // set zoom speed
             controls.enableVerticalRotation();
