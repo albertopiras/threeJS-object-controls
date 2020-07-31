@@ -4,13 +4,17 @@ ThreeJS module that allows you to rotate an Object(mesh) independently from the 
 
 [view live example]
 
-## Usage
-
-Include threeJS and ObjectControls.js into your page
+## Install
 
 ```
-<script src="three.min.js"></script>
-<script src="ObjectControls.js"></script>
+npm install --save threejs-object-controls
+```
+
+## Usage
+
+```
+import * as THREE from 'three';
+import {ObjectControls} from 'threeJS-object-controls';
 ```
 
 Create a new instance of Controls, passig 3 arguments:
@@ -21,8 +25,7 @@ Create a new instance of Controls, passig 3 arguments:
 ```
 var controls = new ObjectControls(camera, renderer.domElement, myMesh);
 ```
-
-look at `index.html` to see an usage example.
+look at the github repo to see an usage example.
 
 You can also change the mesh you want rotate! :tada:
 
@@ -60,6 +63,25 @@ rotationSpeed:
  0.01 => slow
 ```
 
+
+## Tips
+
+In case of problems with ts types required by threejs in a typescript project do the following:
+1) go to the tsconfig.json file
+2) add skipLibCheck: true in "compilerOptions" object.
+```
+    "compilerOptions": {
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "strict": true,
+        "target": "es5",
+        "declaration": true,
+        "declarationDir": "dist-debug/",
+        "skipLibCheck": true, /// Needs to be true to fix wrong alias types being used
+        ...
+    }
+```
+
 ## Version
 1.2
 
@@ -68,6 +90,3 @@ rotationSpeed:
 MIT
 
 [view live example]: <https://albertopiras.github.io/threeJS-object-controls/>
-
-
-
