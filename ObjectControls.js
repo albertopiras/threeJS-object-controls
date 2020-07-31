@@ -1,6 +1,6 @@
 /* --------------------------------------------------------
-THREE.ObjectControls
-version: 1.2
+ObjectControls
+version: 1.2.2
 author: Alberto Piras
 email: a.piras.ict@gmail.com
 github: https://github.com/albertopiras

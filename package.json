@@ -1,6 +1,6 @@
 {
   "name": "threejs-object-controls",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "module for ThreeJS that allows you to rotate an Object(mesh) independently from the rest of the scene, and to zoom in/out moving the camera.",
   "main": "ObjectControls.js",
   "scripts": {
