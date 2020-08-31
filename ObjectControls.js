@@ -1,6 +1,6 @@
 /* --------------------------------------------------------
 ObjectControls
-version: 1.2.2
+version: 1.2.3
 author: Alberto Piras
 email: a.piras.ict@gmail.com
 github: https://github.com/albertopiras
@@ -11,33 +11,54 @@ description: module for ThreeJS that allows you to rotate an Object(mesh) indepe
 /**
  * ObjectControls
  * @constructor
- * @param camera - The camera.
- * @param domElement - the renderer's dom element
- * @param objectToMove - the object to control.
+ * @param camera - reference to the camera.
+ * @param domElement - reference to the renderer's dom element.
+ * @param objectToMove - reference the object to control.
  */
 
 function ObjectControls(camera, domElement, objectToMove) {
 
-  let mesh = objectToMove;
-  domElement = (domElement !== undefined) ? domElement : document;
-
+  /**
+  * setObjectToMove
+  * @description changes the object to control
+  * @param newMesh
+  **/
   this.setObjectToMove = function (newMesh) {
     mesh = newMesh;
   };
 
+  /**
+  * setZoomSpeed
+  * @description sets a custom zoom speed (0.1 == slow  1 == fast)
+  * @param newZoomSpeed
+  **/
+  this.setZoomSpeed = function (newZoomSpeed) {
+    zoomSpeed = newZoomSpeed;
+  };
+
+  /**
+  * setDistance
+  * @description set the zoom range distance
+  * @param {number} min
+  * @param {number} max 
+  **/
   this.setDistance = function (min, max) {
     minDistance = min;
     maxDistance = max;
   };
 
-  this.setZoomSpeed = function (newZoomSpeed) {
-    zoomSpeed = newZoomSpeed;
-  };
-
+  /**
+  * setRotationSpeed
+  * @param {number} newRotationSpeed - (1 == fast)  (0.01 == slow)
+  **/
   this.setRotationSpeed = function (newRotationSpeed) {
     rotationSpeed = newRotationSpeed;
   };
 
+  /**
+  * setRotationSpeedTouchDevices
+  * @param {number} newRotationSpeed - (1 == fast)  (0.01 == slow)
+  **/
   this.setRotationSpeedTouchDevices = function (newRotationSpeed) {
     rotationSpeedTouchDevices = newRotationSpeed;
   };
@@ -78,25 +99,11 @@ function ObjectControls(camera, domElement, objectToMove) {
     MAX_ROTATON_ANGLES.x.enabled = false;
   };
 
-  /** Mouse Interaction Controls (rotate & zoom, desktop **/
-  // Mouse - move
-  domElement.addEventListener('mousedown', mouseDown, false);
-  domElement.addEventListener('mousemove', mouseMove, false);
-  domElement.addEventListener('mouseup', mouseUp, false);
+  domElement = (domElement !== undefined) ? domElement : document;
 
-  // Mouse - zoom
-  domElement.addEventListener('wheel', wheel, false);
+  /********************* Private control variables *************************/
 
-
-  /** Touch Interaction Controls (rotate & zoom, mobile) **/
-  // Touch - move
-  domElement.addEventListener('touchstart', onTouchStart, false);
-  domElement.addEventListener('touchmove', onTouchMove, false);
-  domElement.addEventListener('touchend', onTouchEnd, false);
-
-  /********************* controls variables *************************/
-
-  var MAX_ROTATON_ANGLES = {
+  const MAX_ROTATON_ANGLES = {
     x: {
       // Vertical from bottom to top.
       enabled: false,
@@ -111,31 +118,28 @@ function ObjectControls(camera, domElement, objectToMove) {
     }
   };
 
-  /**
-   * RotationSpeed
-   * 1= fast
-   * 0.01 = slow
-   * */
-  var maxDistance = 15, minDistance = 6, zoomSpeed = 0.5, rotationSpeed = 0.05,
-    rotationSpeedTouchDevices = 0.05, verticalRotationEnabled = false,
-    horizontalRotationEnabled = true;
+  let
+    flag,
+    mesh = objectToMove,
+    maxDistance = 15,
+    minDistance = 6,
+    zoomSpeed = 0.5,
+    rotationSpeed = 0.05,
+    rotationSpeedTouchDevices = 0.05,
+    isDragging = false,
+    verticalRotationEnabled = false,
+    horizontalRotationEnabled = true,
+    mouseFlags = { MOUSEDOWN: 0, MOUSEMOVE: 1 },
+    previousMousePosition = { x: 0, y: 0 },
+    prevZoomDiff = { X: null, Y: null },
+    /**
+    * CurrentTouches
+    * length 0 : no zoom
+    * length 2 : is zoomming
+    */
+    currentTouches = [];
 
-  var mouseFlags = { MOUSEDOWN: 0, MOUSEMOVE: 1 };
-
-  var flag;
-  var isDragging = false;
-  var previousMousePosition = { x: 0, y: 0 };
-
-  /**
-   * CurrentTouches
-   * length 0 : no zoom
-   * length 2 : is zoomming
-   */
-  var currentTouches = [];
-
-  var prevZoomDiff = { X: null, Y: null };
-
-  /***************************** shared functions **********************/
+  /***************************** Private shared functions **********************/
 
   function zoomIn() {
     camera.position.z -= zoomSpeed;
@@ -146,6 +150,7 @@ function ObjectControls(camera, domElement, objectToMove) {
   }
 
   /**
+   * isWithinMaxAngle
    * @description Checks if the rotation in a specific axe is within the maximum
    * values allowed.
    * @param delta is the difference of the current rotation angle and the
@@ -157,7 +162,7 @@ function ObjectControls(camera, domElement, objectToMove) {
    */
   function isWithinMaxAngle(delta, axe) {
     if (MAX_ROTATON_ANGLES[axe].enabled) {
-      var condition = ((MAX_ROTATON_ANGLES[axe].from * -1) <
+      const condition = ((MAX_ROTATON_ANGLES[axe].from * -1) <
         (mesh.rotation[axe] + delta)) &&
         ((mesh.rotation[axe] + delta) < MAX_ROTATON_ANGLES[axe].to);
       return condition ? true : false;
@@ -177,7 +182,7 @@ function ObjectControls(camera, domElement, objectToMove) {
 
   function mouseMove(e) {
     if (isDragging) {
-      var deltaMove = {
+      const deltaMove = {
         x: e.offsetX - previousMousePosition.x,
         y: e.offsetY - previousMousePosition.y
       };
@@ -208,13 +213,13 @@ function ObjectControls(camera, domElement, objectToMove) {
     }
   }
 
-  function mouseUp(e) {
+  function mouseUp() {
     isDragging = false;
     resetMousePosition();
   }
 
   function wheel(e) {
-    var delta = e.wheelDelta ? e.wheelDelta : e.deltaY * -1;
+    const delta = e.wheelDelta ? e.wheelDelta : e.deltaY * -1;
     if (delta > 0 && camera.position.z > minDistance) {
       zoomIn();
     } else if (delta < 0 && camera.position.z < maxDistance) {
@@ -269,8 +274,8 @@ function ObjectControls(camera, domElement, objectToMove) {
     if (e.touches.length === 2) {
       currentTouches = new Array(2);
       // Calculate the distance between the two pointers.
-      var curDiffX = Math.abs(e.touches[0].clientX - e.touches[1].clientX);
-      var curDiffY = Math.abs(e.touches[0].clientY - e.touches[1].clientY);
+      const curDiffX = Math.abs(e.touches[0].clientX - e.touches[1].clientX);
+      const curDiffY = Math.abs(e.touches[0].clientY - e.touches[1].clientY);
 
       if (prevZoomDiff && prevZoomDiff.X > 0 && prevZoomDiff.Y > 0) {
         if ((curDiffX > prevZoomDiff.X) && (curDiffY > prevZoomDiff.Y) &&
@@ -290,7 +295,7 @@ function ObjectControls(camera, domElement, objectToMove) {
     } else if (currentTouches.length === 0) {
       prevZoomDiff.X = null;
       prevZoomDiff.Y = null;
-      var deltaMove = {
+      const deltaMove = {
         x: e.touches[0].pageX - previousMousePosition.x,
         y: e.touches[0].pageY - previousMousePosition.y
       };
@@ -311,4 +316,21 @@ function ObjectControls(camera, domElement, objectToMove) {
       }
     }
   }
+
+  /********************* Event Listeners *************************/
+
+  /** Mouse Interaction Controls (rotate & zoom, desktop **/
+  // Mouse - move
+  domElement.addEventListener('mousedown', mouseDown, false);
+  domElement.addEventListener('mousemove', mouseMove, false);
+  domElement.addEventListener('mouseup', mouseUp, false);
+  // Mouse - zoom
+  domElement.addEventListener('wheel', wheel, false);
+
+  /** Touch Interaction Controls (rotate & zoom, mobile) **/
+  // Touch - move
+  domElement.addEventListener('touchstart', onTouchStart, false);
+  domElement.addEventListener('touchmove', onTouchMove, false);
+  domElement.addEventListener('touchend', onTouchEnd, false);
+
 };
