@@ -1,5 +1,5 @@
 # ThreeJS Object Controls
-[![NPM Package][npm]][https://www.npmjs.com/package/threejs-object-controls]
+[![npm version](http://img.shields.io/npm/v/threejs-object-controls.svg?style=flat)](https://npmjs.org/package/threejs-object-controls "View this project on npm")
 
 ThreeJS module that allows you to rotate an Object(mesh) independently from the rest of the scene, and to zoom in/out moving the camera.
 
@@ -45,7 +45,7 @@ You can set different options like
 - controls.setDistance(8, 200); // sets the min - max distance able to zoom
 - controls.setZoomSpeed(1); // sets the zoom speed ( 0.1 == slow, 1 == fast)
 - controls.setObjectToMove(newMesh); // changes the object to interact with
-controls.setRotationSpeed(0.05); // sets a new rotation speed for desktop ( 0.1 == slow, 1 == fast)
+- controls.setRotationSpeed(0.05); // sets a new rotation speed for desktop ( 0.1 == slow, 1 == fast)
 - controls.setRotationSpeedTouchDevices(value); // sets a new rotation speed for mobile
 - controls.enableVerticalRotation(); // enables the vertical rotation
 - constrols.disableVerticalRotation();  // disables the vertical rotation
@@ -58,7 +58,7 @@ controls.setRotationSpeed(0.05); // sets a new rotation speed for desktop ( 0.1 
 ```
 
 ## Version
-1.2.3
+1.2.4
 
 ## License
 
