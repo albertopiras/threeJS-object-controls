@@ -1,6 +1,6 @@
 /* --------------------------------------------------------
 ObjectControls
-version: 1.2.3
+version: 1.2.4
 author: Alberto Piras
 email: a.piras.ict@gmail.com
 github: https://github.com/albertopiras
