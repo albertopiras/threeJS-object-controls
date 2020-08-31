@@ -1,4 +1,5 @@
 # ThreeJS Object Controls
+[![NPM Package][npm]][https://www.npmjs.com/package/threejs-object-controls]
 
 ThreeJS module that allows you to rotate an Object(mesh) independently from the rest of the scene, and to zoom in/out moving the camera.
 
@@ -44,23 +45,19 @@ You can set different options like
 
 
 ```
-controls.setDistance(8, 200); // set min - max distance for zoom
-
-controls.setZoomSpeed(1); // set zoom speed
-
-controls.enableVerticalRotation(); // enables the vertical rotation, see also disableVerticalRotation(), enableHorizontalRotation(), disableHorizontalRotation()
-
-controls.setMaxVerticalRotationAngle(Math.PI / 4, Math.PI / 4); // sets a max angle value for the rotation of the object, see also setMaxHorizontalRotationAngle(R,R)
-
-controls.disableMaxHorizontalAngleRotation()// disables rotation angle limits for horizontal rotation, see also disableMaxVerticalAngleRotation()
-
-controls.setRotationSpeed(0.05); // sets a new rotation speed for desktop, see also setRotationSpeedTouchDevices(value)
-
-Parameters details:
-
-rotationSpeed:
- 1 => fast
- 0.01 => slow
+- controls.setDistance(8, 200); // sets the min - max distance able to zoom
+- controls.setZoomSpeed(1); // sets the zoom speed ( 0.1 == slow, 1 == fast)
+- controls.setObjectToMove(newMesh); // changes the object to interact with
+controls.setRotationSpeed(0.05); // sets a new rotation speed for desktop ( 0.1 == slow, 1 == fast)
+- controls.setRotationSpeedTouchDevices(value); // sets a new rotation speed for mobile
+- controls.enableVerticalRotation(); // enables the vertical rotation
+- constrols.disableVerticalRotation();  // disables the vertical rotation
+- controls.enableHorizontalRotation(); // enables the horizontal rotation
+- controls.disableHorizontalRotation();// disables the horizontal rotation
+- controls.setMaxVerticalRotationAngle(Math.PI / 4, Math.PI / 4); // sets a max angle value for the vertical rotation of the object
+- controls.setMaxHorizontalRotationAngle(R,R); // sets a max angle value for the horizontal rotation of the object
+- controls.disableMaxHorizontalAngleRotation(); // disables angle limits for horizontal rotation
+- controls.disableMaxVerticalAngleRotation(); // disables angle limits for vertical rotation
 ```
 
 
@@ -83,12 +80,10 @@ In case of problems with ts types required by threejs in a typescript project do
 ```
 
 ## Version
-1.2.1
+1.2.3
 
 ## License
 
 MIT
 
 [view live example]: <https://albertopiras.github.io/threeJS-object-controls/>
-
-[github example repo]: <https://github.com/albertopiras/object-controls-angular-example>
