@@ -333,6 +333,8 @@ function ObjectControls(camera, domElement, objectToMove) {
   domElement.addEventListener('mousedown', mouseDown, false);
   domElement.addEventListener('mousemove', mouseMove, false);
   domElement.addEventListener('mouseup', mouseUp, false);
+  domElement.addEventListener('mouseout', mouseUp, false);
+
   // Mouse - zoom
   domElement.addEventListener('wheel', wheel, false);
 
