@@ -343,3 +343,5 @@ function ObjectControls(camera, domElement, objectToMove) {
   domElement.addEventListener('touchend', onTouchEnd, false);
 
 };
+
+export { ObjectControls };
