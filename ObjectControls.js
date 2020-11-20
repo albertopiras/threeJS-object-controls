@@ -98,6 +98,14 @@ function ObjectControls(camera, domElement, objectToMove) {
     MAX_ROTATON_ANGLES.x.enabled = false;
   };
 
+  this.disableZoom = function() {
+    zoomEnabled = false;
+  }
+
+  this.enableZoom = function() {
+    zoomEnabled = true;
+  }
+
   domElement = (domElement !== undefined) ? domElement : document;
 
   /********************* Private control variables *************************/
@@ -128,6 +136,7 @@ function ObjectControls(camera, domElement, objectToMove) {
     isDragging = false,
     verticalRotationEnabled = false,
     horizontalRotationEnabled = true,
+    zoomEnabled = true,
     mouseFlags = { MOUSEDOWN: 0, MOUSEMOVE: 1 },
     previousMousePosition = { x: 0, y: 0 },
     prevZoomDiff = { X: null, Y: null },
@@ -141,11 +150,11 @@ function ObjectControls(camera, domElement, objectToMove) {
   /***************************** Private shared functions **********************/
 
   function zoomIn() {
-    camera.position.z -= zoomSpeed;
+    if (zoomEnabled) camera.position.z -= zoomSpeed;
   }
 
   function zoomOut() {
-    camera.position.z += zoomSpeed;
+    if (zoomEnabled) camera.position.z += zoomSpeed;
   }
 
   /**
@@ -323,6 +332,8 @@ function ObjectControls(camera, domElement, objectToMove) {
   domElement.addEventListener('mousedown', mouseDown, false);
   domElement.addEventListener('mousemove', mouseMove, false);
   domElement.addEventListener('mouseup', mouseUp, false);
+  domElement.addEventListener('mouseout', mouseUp, false);
+
   // Mouse - zoom
   domElement.addEventListener('wheel', wheel, false);
 

@@ -48,6 +48,8 @@ You can set different options like
 ```
 - controls.setDistance(8, 200); // sets the min - max distance able to zoom
 - controls.setZoomSpeed(1); // sets the zoom speed ( 0.1 == slow, 1 == fast)
+- controls.disableZoom(); // disables zoom
+- controls.enableZoom(); // enables zoom
 - controls.setObjectToMove(newMesh); // changes the object to interact with
 - controls.setRotationSpeed(0.05); // sets a new rotation speed for desktop ( 0.1 == slow, 1 == fast)
 - controls.setRotationSpeedTouchDevices(value); // sets a new rotation speed for mobile
