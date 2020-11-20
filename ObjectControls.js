@@ -1,6 +1,6 @@
 /* --------------------------------------------------------
 ObjectControls
-version: 1.2.4
+version: 1.2.5
 author: Alberto Piras
 email: a.piras.ict@gmail.com
 github: https://github.com/albertopiras
@@ -150,11 +150,11 @@ function ObjectControls(camera, domElement, objectToMove) {
   /***************************** Private shared functions **********************/
 
   function zoomIn() {
-    if (zoomEnabled) camera.position.z -= zoomSpeed;
+    camera.position.z -= zoomSpeed;
   }
 
   function zoomOut() {
-    if (zoomEnabled) camera.position.z += zoomSpeed;
+    camera.position.z += zoomSpeed;
   }
 
   /**
@@ -227,6 +227,7 @@ function ObjectControls(camera, domElement, objectToMove) {
   }
 
   function wheel(e) {
+    if(!zoomEnabled) return;
     const delta = e.wheelDelta ? e.wheelDelta : e.deltaY * -1;
     if (delta > 0 && camera.position.z > minDistance) {
       zoomIn();
@@ -279,7 +280,7 @@ function ObjectControls(camera, domElement, objectToMove) {
     flag = mouseFlags.MOUSEMOVE;
     // Touch zoom.
     // If two pointers are down, check for pinch gestures.
-    if (e.touches.length === 2) {
+    if (e.touches.length === 2 && zoomEnabled) {
       currentTouches = new Array(2);
       // Calculate the distance between the two pointers.
       const curDiffX = Math.abs(e.touches[0].clientX - e.touches[1].clientX);
