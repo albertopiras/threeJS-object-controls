@@ -83,7 +83,7 @@ In case of problems with ts types required by threejs in a typescript project do
 ```
 
 ## Version
-1.2.5
+1.2.6
 
 ## License
 
