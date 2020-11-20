@@ -57,12 +57,12 @@
     </div>
 
     <script src="libs/three.min.js"></script>
-    <script src="ObjectControls.js"></script>
-
     <script src="libs/dat.gui.min.js"></script>
     <script src="libs/Detector.js"></script>
 
-    <script>
+    <script type="module">
+        import {ObjectControls} from './ObjectControls.js';
+
         if (!Detector.webgl) Detector.addGetWebGLMessage();
 
         var renderer = new THREE.WebGLRenderer();
@@ -146,14 +146,6 @@
             controls.setRotationSpeed(0.05);
 
             window.addEventListener('resize', onResize, false);
-
-        }
-
-        function onResize() {
-
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            camera.aspect = (window.innerWidth / window.innerHeight);
-            camera.updateProjectionMatrix();
 
         }
 

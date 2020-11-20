@@ -15,7 +15,6 @@ description: module for ThreeJS that allows you to rotate an Object(mesh) indepe
  * @param domElement - reference to the renderer's dom element.
  * @param objectToMove - reference the object to control.
  */
-
 function ObjectControls(camera, domElement, objectToMove) {
 
   /**
@@ -334,3 +333,5 @@ function ObjectControls(camera, domElement, objectToMove) {
   domElement.addEventListener('touchend', onTouchEnd, false);
 
 };
+
+export { ObjectControls };
