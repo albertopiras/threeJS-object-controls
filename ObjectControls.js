@@ -19,7 +19,7 @@ function ObjectControls(camera, domElement, objectToMove) {
 
   /**
   * setObjectToMove
-  * @description changes the object to control
+  * @description changes the object(s) to control
   * @param newMesh
   **/
   this.setObjectToMove = function (newMesh) {
@@ -98,11 +98,11 @@ function ObjectControls(camera, domElement, objectToMove) {
     MAX_ROTATON_ANGLES.x.enabled = false;
   };
 
-  this.disableZoom = function() {
+  this.disableZoom = function () {
     zoomEnabled = false;
   }
 
-  this.enableZoom = function() {
+  this.enableZoom = function () {
     zoomEnabled = true;
   }
 
@@ -157,6 +157,55 @@ function ObjectControls(camera, domElement, objectToMove) {
     camera.position.z += zoomSpeed;
   }
 
+  function rotateVertical(deltaMove, mesh) {
+    if (mesh.length > 1) {
+      for (let i = 0; i < mesh.length; i++) {
+        rotateVertical(deltaMove, mesh[i])
+      }
+      return;
+    }
+    mesh.rotation.x += Math.sign(deltaMove.y) * rotationSpeed;
+
+  }
+
+  function rotateVerticalTouch(deltaMove, mesh) {
+    if (mesh.length > 1) {
+      for (let i = 0; i < mesh.length; i++) {
+
+        rotateVerticalTouch(deltaMove, mesh[i])
+      }
+      return;
+    }
+    mesh.rotation.x += Math.sign(deltaMove.y) * rotationSpeedTouchDevices;
+  }
+
+
+
+  function rotateHorizontal(deltaMove, mesh) {
+    if (mesh.length > 1) {
+      for (let i = 0; i < mesh.length; i++) {
+
+        rotateHorizontal(deltaMove, mesh[i])
+
+      }
+      return;
+    }
+    mesh.rotation.y += Math.sign(deltaMove.x) * rotationSpeed;
+
+
+  }
+
+  function rotateHorizontalTouch(deltaMove, mesh) {
+    if (mesh.length > 1) {
+      for (let i = 0; i < mesh.length; i++) {
+
+        rotateHorizontalTouch(deltaMove, mesh[i])
+      }
+      return;
+    }
+    mesh.rotation.y += Math.sign(deltaMove.x) * rotationSpeedTouchDevices;
+  }
+
   /**
    * isWithinMaxAngle
    * @description Checks if the rotation in a specific axe is within the maximum
@@ -169,7 +218,21 @@ function ObjectControls(camera, domElement, objectToMove) {
    *     allowed angle range, false otherwise
    */
   function isWithinMaxAngle(delta, axe) {
+
     if (MAX_ROTATON_ANGLES[axe].enabled) {
+      if (mesh.length > 1) {
+        let condition = true;
+        for (let i = 0; i < mesh.length; i++) {
+          if (!condition) return false;
+          if (MAX_ROTATON_ANGLES[axe].enabled) {
+            condition = ((MAX_ROTATON_ANGLES[axe].from * -1) <
+              (mesh[i].rotation[axe] + delta)) &&
+              ((mesh[i].rotation[axe] + delta) < MAX_ROTATON_ANGLES[axe].to) ? true : false;
+          }
+        }
+        return condition
+      }
+
       const condition = ((MAX_ROTATON_ANGLES[axe].from * -1) <
         (mesh.rotation[axe] + delta)) &&
         ((mesh.rotation[axe] + delta) < MAX_ROTATON_ANGLES[axe].to);
@@ -204,7 +267,9 @@ function ObjectControls(camera, domElement, objectToMove) {
       {
         if (!isWithinMaxAngle(Math.sign(deltaMove.x) * rotationSpeed, 'y'))
           return;
-        mesh.rotation.y += Math.sign(deltaMove.x) * rotationSpeed;
+
+        rotateHorizontal(deltaMove, mesh)
+
         flag = mouseFlags.MOUSEMOVE;
       }
 
@@ -215,7 +280,7 @@ function ObjectControls(camera, domElement, objectToMove) {
       {
         if (!isWithinMaxAngle(Math.sign(deltaMove.y) * rotationSpeed, 'x'))
           return;
-        mesh.rotation.x += Math.sign(deltaMove.y) * rotationSpeed;
+        rotateVertical(deltaMove, mesh)
         flag = mouseFlags.MOUSEMOVE;
       }
     }
@@ -227,7 +292,7 @@ function ObjectControls(camera, domElement, objectToMove) {
   }
 
   function wheel(e) {
-    if(!zoomEnabled) return;
+    if (!zoomEnabled) return;
     const delta = e.wheelDelta ? e.wheelDelta : e.deltaY * -1;
     if (delta > 0 && camera.position.z > minDistance) {
       zoomIn();
@@ -314,14 +379,14 @@ function ObjectControls(camera, domElement, objectToMove) {
         if (!isWithinMaxAngle(
           Math.sign(deltaMove.x) * rotationSpeedTouchDevices, 'y'))
           return;
-        mesh.rotation.y += Math.sign(deltaMove.x) * rotationSpeedTouchDevices;
+        rotateHorizontalTouch(deltaMove, mesh)
       }
 
       if (verticalRotationEnabled && deltaMove.y != 0) {
         if (!isWithinMaxAngle(
           Math.sign(deltaMove.y) * rotationSpeedTouchDevices, 'x'))
           return;
-        mesh.rotation.x += Math.sign(deltaMove.y) * rotationSpeedTouchDevices;
+        rotateVerticalTouch(deltaMove, mesh)
       }
     }
   }
