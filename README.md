@@ -1,7 +1,7 @@
 # ThreeJS Object Controls
 [![npm version](http://img.shields.io/npm/v/threejs-object-controls.svg?style=flat)](https://npmjs.org/package/threejs-object-controls "View this project on npm")
 
-ThreeJS module that allows you to rotate an Object(mesh) independently from the rest of the scene, and to zoom in/out moving the camera.
+ThreeJS module that allows you to rotate one or more Objects(mesh) independently from the rest of the scene, and to zoom in/out moving the camera.
 
 [view live example]
 
@@ -49,13 +49,14 @@ You can set different options like
 * enable disable axis rotations
 * set max rotation angle
 
-
+Eg:
 ```
 - controls.setDistance(8, 200); // sets the min - max distance able to zoom
 - controls.setZoomSpeed(1); // sets the zoom speed ( 0.1 == slow, 1 == fast)
 - controls.disableZoom(); // disables zoom
 - controls.enableZoom(); // enables zoom
-- controls.setObjectToMove(newMesh); // changes the object(s) to interact with
+- controls.setObjectToMove(newMesh); // changes the object to interact with
+- controls.setObjectToMove([mshBox,mshBox2]); // changes the objects to interact with
 - controls.setRotationSpeed(0.05); // sets a new rotation speed for desktop ( 0.1 == slow, 1 == fast)
 - controls.setRotationSpeedTouchDevices(value); // sets a new rotation speed for mobile
 - controls.enableVerticalRotation(); // enables the vertical rotation
@@ -92,7 +93,7 @@ If more than one mesh is passed in as the object to move, all objects will stop 
 
 
 ## Version
-1.2.6
+1.2.7
 
 ## License
 
