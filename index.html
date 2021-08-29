@@ -223,12 +223,14 @@
                 },
                 useMesh2: function () {
                     controls.setObjectToMove(mshBox2);
+                },
+                useBoth: function () {
+                    controls.setObjectToMove([mshBox,mshBox2]);
                 }
             };
             gui.add(changeMeshConfig, 'useMesh1');
-
             gui.add(changeMeshConfig, 'useMesh2');
-
+            gui.add(changeMeshConfig, 'useBoth');
         }
 
         function addGui(name, value, callback, isColor, min, max) {

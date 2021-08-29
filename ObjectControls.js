@@ -1,6 +1,6 @@
 /* --------------------------------------------------------
 ObjectControls
-version: 1.2.6
+version: 1.2.7
 author: Alberto Piras
 email: a.piras.ict@gmail.com
 github: https://github.com/albertopiras
@@ -16,48 +16,47 @@ description: module for ThreeJS that allows you to rotate an Object(mesh) indepe
  * @param objectToMove - reference the object to control.
  */
 function ObjectControls(camera, domElement, objectToMove) {
-
   /**
-  * setObjectToMove
-  * @description changes the object to control
-  * @param newMesh
-  **/
+   * setObjectToMove
+   * @description changes the object(s) to control
+   * @param newMesh : one mesh or an array of meshes
+   **/
   this.setObjectToMove = function (newMesh) {
     mesh = newMesh;
   };
 
   /**
-  * setZoomSpeed
-  * @description sets a custom zoom speed (0.1 == slow  1 == fast)
-  * @param newZoomSpeed
-  **/
+   * setZoomSpeed
+   * @description sets a custom zoom speed (0.1 == slow  1 == fast)
+   * @param newZoomSpeed
+   **/
   this.setZoomSpeed = function (newZoomSpeed) {
     zoomSpeed = newZoomSpeed;
   };
 
   /**
-  * setDistance
-  * @description set the zoom range distance
-  * @param {number} min
-  * @param {number} max 
-  **/
+   * setDistance
+   * @description set the zoom range distance
+   * @param {number} min
+   * @param {number} max
+   **/
   this.setDistance = function (min, max) {
     minDistance = min;
     maxDistance = max;
   };
 
   /**
-  * setRotationSpeed
-  * @param {number} newRotationSpeed - (1 == fast)  (0.01 == slow)
-  **/
+   * setRotationSpeed
+   * @param {number} newRotationSpeed - (1 == fast)  (0.01 == slow)
+   **/
   this.setRotationSpeed = function (newRotationSpeed) {
     rotationSpeed = newRotationSpeed;
   };
 
   /**
-  * setRotationSpeedTouchDevices
-  * @param {number} newRotationSpeed - (1 == fast)  (0.01 == slow)
-  **/
+   * setRotationSpeedTouchDevices
+   * @param {number} newRotationSpeed - (1 == fast)  (0.01 == slow)
+   **/
   this.setRotationSpeedTouchDevices = function (newRotationSpeed) {
     rotationSpeedTouchDevices = newRotationSpeed;
   };
@@ -98,15 +97,15 @@ function ObjectControls(camera, domElement, objectToMove) {
     MAX_ROTATON_ANGLES.x.enabled = false;
   };
 
-  this.disableZoom = function() {
+  this.disableZoom = function () {
     zoomEnabled = false;
-  }
+  };
 
-  this.enableZoom = function() {
+  this.enableZoom = function () {
     zoomEnabled = true;
-  }
+  };
 
-  domElement = (domElement !== undefined) ? domElement : document;
+  domElement = domElement !== undefined ? domElement : document;
 
   /********************* Private control variables *************************/
 
@@ -115,18 +114,17 @@ function ObjectControls(camera, domElement, objectToMove) {
       // Vertical from bottom to top.
       enabled: false,
       from: Math.PI / 8,
-      to: Math.PI / 8
+      to: Math.PI / 8,
     },
     y: {
       // Horizontal from left to right.
       enabled: false,
       from: Math.PI / 4,
-      to: Math.PI / 4
-    }
+      to: Math.PI / 4,
+    },
   };
 
-  let
-    flag,
+  let flag,
     mesh = objectToMove,
     maxDistance = 15,
     minDistance = 6,
@@ -141,10 +139,10 @@ function ObjectControls(camera, domElement, objectToMove) {
     previousMousePosition = { x: 0, y: 0 },
     prevZoomDiff = { X: null, Y: null },
     /**
-    * CurrentTouches
-    * length 0 : no zoom
-    * length 2 : is zoomming
-    */
+     * CurrentTouches
+     * length 0 : no zoom
+     * length 2 : is zoomming
+     */
     currentTouches = [];
 
   /***************************** Private shared functions **********************/
@@ -155,6 +153,46 @@ function ObjectControls(camera, domElement, objectToMove) {
 
   function zoomOut() {
     camera.position.z += zoomSpeed;
+  }
+
+  function rotateVertical(deltaMove, mesh) {
+    if (mesh.length > 1) {
+      for (let i = 0; i < mesh.length; i++) {
+        rotateVertical(deltaMove, mesh[i]);
+      }
+      return;
+    }
+    mesh.rotation.x += Math.sign(deltaMove.y) * rotationSpeed;
+  }
+
+  function rotateVerticalTouch(deltaMove, mesh) {
+    if (mesh.length > 1) {
+      for (let i = 0; i < mesh.length; i++) {
+        rotateVerticalTouch(deltaMove, mesh[i]);
+      }
+      return;
+    }
+    mesh.rotation.x += Math.sign(deltaMove.y) * rotationSpeedTouchDevices;
+  }
+
+  function rotateHorizontal(deltaMove, mesh) {
+    if (mesh.length > 1) {
+      for (let i = 0; i < mesh.length; i++) {
+        rotateHorizontal(deltaMove, mesh[i]);
+      }
+      return;
+    }
+    mesh.rotation.y += Math.sign(deltaMove.x) * rotationSpeed;
+  }
+
+  function rotateHorizontalTouch(deltaMove, mesh) {
+    if (mesh.length > 1) {
+      for (let i = 0; i < mesh.length; i++) {
+        rotateHorizontalTouch(deltaMove, mesh[i]);
+      }
+      return;
+    }
+    mesh.rotation.y += Math.sign(deltaMove.x) * rotationSpeedTouchDevices;
   }
 
   /**
@@ -170,12 +208,27 @@ function ObjectControls(camera, domElement, objectToMove) {
    */
   function isWithinMaxAngle(delta, axe) {
     if (MAX_ROTATON_ANGLES[axe].enabled) {
-      const condition = ((MAX_ROTATON_ANGLES[axe].from * -1) <
-        (mesh.rotation[axe] + delta)) &&
-        ((mesh.rotation[axe] + delta) < MAX_ROTATON_ANGLES[axe].to);
-      return condition ? true : false;
+      if (mesh.length > 1) {
+        let condition = true;
+        for (let i = 0; i < mesh.length; i++) {
+          if (!condition) return false;
+          if (MAX_ROTATON_ANGLES[axe].enabled) {
+            condition = isRotationWithinMaxAngles(mesh[i], delta, axe);
+          }
+        }
+        return condition;
+      }
+      return isRotationWithinMaxAngles(mesh, delta, axe);
     }
     return true;
+  }
+
+  function isRotationWithinMaxAngles(meshToRotate, delta, axe) {
+    return MAX_ROTATON_ANGLES[axe].from * -1 <
+      meshToRotate.rotation[axe] + delta &&
+      meshToRotate.rotation[axe] + delta < MAX_ROTATON_ANGLES[axe].to
+      ? true
+      : false;
   }
 
   function resetMousePosition() {
@@ -192,30 +245,28 @@ function ObjectControls(camera, domElement, objectToMove) {
     if (isDragging) {
       const deltaMove = {
         x: e.offsetX - previousMousePosition.x,
-        y: e.offsetY - previousMousePosition.y
+        y: e.offsetY - previousMousePosition.y,
       };
 
       previousMousePosition = { x: e.offsetX, y: e.offsetY };
 
-      if (horizontalRotationEnabled && deltaMove.x != 0)
-      // && (Math.abs(deltaMove.x) > Math.abs(deltaMove.y))) {
-      // enabling this, the mesh will rotate only in one specific direction
-      // for mouse movement
-      {
-        if (!isWithinMaxAngle(Math.sign(deltaMove.x) * rotationSpeed, 'y'))
+      if (horizontalRotationEnabled && deltaMove.x != 0) {
+        // && (Math.abs(deltaMove.x) > Math.abs(deltaMove.y))) {
+        // enabling this, the mesh will rotate only in one specific direction
+        // for mouse movement
+        if (!isWithinMaxAngle(Math.sign(deltaMove.x) * rotationSpeed, "y"))
           return;
-        mesh.rotation.y += Math.sign(deltaMove.x) * rotationSpeed;
+        rotateHorizontal(deltaMove, mesh);
         flag = mouseFlags.MOUSEMOVE;
       }
 
-      if (verticalRotationEnabled && deltaMove.y != 0)
-      // &&(Math.abs(deltaMove.y) > Math.abs(deltaMove.x)) //
-      // enabling this, the mesh will rotate only in one specific direction for
-      // mouse movement
-      {
-        if (!isWithinMaxAngle(Math.sign(deltaMove.y) * rotationSpeed, 'x'))
+      if (verticalRotationEnabled && deltaMove.y != 0) {
+        // &&(Math.abs(deltaMove.y) > Math.abs(deltaMove.x)) //
+        // enabling this, the mesh will rotate only in one specific direction for
+        // mouse movement
+        if (!isWithinMaxAngle(Math.sign(deltaMove.y) * rotationSpeed, "x"))
           return;
-        mesh.rotation.x += Math.sign(deltaMove.y) * rotationSpeed;
+        rotateVertical(deltaMove, mesh);
         flag = mouseFlags.MOUSEMOVE;
       }
     }
@@ -227,7 +278,7 @@ function ObjectControls(camera, domElement, objectToMove) {
   }
 
   function wheel(e) {
-    if(!zoomEnabled) return;
+    if (!zoomEnabled) return;
     const delta = e.wheelDelta ? e.wheelDelta : e.deltaY * -1;
     if (delta > 0 && camera.position.z > minDistance) {
       zoomIn();
@@ -287,12 +338,17 @@ function ObjectControls(camera, domElement, objectToMove) {
       const curDiffY = Math.abs(e.touches[0].clientY - e.touches[1].clientY);
 
       if (prevZoomDiff && prevZoomDiff.X > 0 && prevZoomDiff.Y > 0) {
-        if ((curDiffX > prevZoomDiff.X) && (curDiffY > prevZoomDiff.Y) &&
-          (camera.position.z > minDistance)) {
+        if (
+          curDiffX > prevZoomDiff.X &&
+          curDiffY > prevZoomDiff.Y &&
+          camera.position.z > minDistance
+        ) {
           zoomIn();
         } else if (
-          curDiffX < prevZoomDiff.X && camera.position.z < maxDistance &&
-          curDiffY < prevZoomDiff.Y) {
+          curDiffX < prevZoomDiff.X &&
+          camera.position.z < maxDistance &&
+          curDiffY < prevZoomDiff.Y
+        ) {
           zoomOut();
         }
       }
@@ -306,22 +362,30 @@ function ObjectControls(camera, domElement, objectToMove) {
       prevZoomDiff.Y = null;
       const deltaMove = {
         x: e.touches[0].pageX - previousMousePosition.x,
-        y: e.touches[0].pageY - previousMousePosition.y
+        y: e.touches[0].pageY - previousMousePosition.y,
       };
       previousMousePosition = { x: e.touches[0].pageX, y: e.touches[0].pageY };
 
       if (horizontalRotationEnabled && deltaMove.x != 0) {
-        if (!isWithinMaxAngle(
-          Math.sign(deltaMove.x) * rotationSpeedTouchDevices, 'y'))
+        if (
+          !isWithinMaxAngle(
+            Math.sign(deltaMove.x) * rotationSpeedTouchDevices,
+            "y"
+          )
+        )
           return;
-        mesh.rotation.y += Math.sign(deltaMove.x) * rotationSpeedTouchDevices;
+        rotateHorizontalTouch(deltaMove, mesh);
       }
 
       if (verticalRotationEnabled && deltaMove.y != 0) {
-        if (!isWithinMaxAngle(
-          Math.sign(deltaMove.y) * rotationSpeedTouchDevices, 'x'))
+        if (
+          !isWithinMaxAngle(
+            Math.sign(deltaMove.y) * rotationSpeedTouchDevices,
+            "x"
+          )
+        )
           return;
-        mesh.rotation.x += Math.sign(deltaMove.y) * rotationSpeedTouchDevices;
+        rotateVerticalTouch(deltaMove, mesh);
       }
     }
   }
@@ -330,20 +394,19 @@ function ObjectControls(camera, domElement, objectToMove) {
 
   /** Mouse Interaction Controls (rotate & zoom, desktop **/
   // Mouse - move
-  domElement.addEventListener('mousedown', mouseDown, false);
-  domElement.addEventListener('mousemove', mouseMove, false);
-  domElement.addEventListener('mouseup', mouseUp, false);
-  domElement.addEventListener('mouseout', mouseUp, false);
+  domElement.addEventListener("mousedown", mouseDown, false);
+  domElement.addEventListener("mousemove", mouseMove, false);
+  domElement.addEventListener("mouseup", mouseUp, false);
+  domElement.addEventListener("mouseout", mouseUp, false);
 
   // Mouse - zoom
-  domElement.addEventListener('wheel', wheel, false);
+  domElement.addEventListener("wheel", wheel, false);
 
   /** Touch Interaction Controls (rotate & zoom, mobile) **/
   // Touch - move
-  domElement.addEventListener('touchstart', onTouchStart, false);
-  domElement.addEventListener('touchmove', onTouchMove, false);
-  domElement.addEventListener('touchend', onTouchEnd, false);
-
-};
+  domElement.addEventListener("touchstart", onTouchStart, false);
+  domElement.addEventListener("touchmove", onTouchMove, false);
+  domElement.addEventListener("touchend", onTouchEnd, false);
+}
 
 export { ObjectControls };

@@ -1,7 +1,7 @@
 # ThreeJS Object Controls
 [![npm version](http://img.shields.io/npm/v/threejs-object-controls.svg?style=flat)](https://npmjs.org/package/threejs-object-controls "View this project on npm")
 
-ThreeJS module that allows you to rotate an Object(mesh) independently from the rest of the scene, and to zoom in/out moving the camera.
+ThreeJS module that allows you to rotate one or more Objects(mesh) independently from the rest of the scene, and to zoom in/out moving the camera.
 
 [view live example]
 
@@ -21,11 +21,16 @@ import {ObjectControls} from 'threeJS-object-controls';
 Create a new instance of Controls, passig 3 arguments:
 * camera
 * renderer element
-* the mesh to move
+* the mesh(s) to move
 
 ```
 var controls = new ObjectControls(camera, renderer.domElement, myMesh);
 ```
+or
+```
+var controls = new ObjectControls(camera, renderer.domElement, [myMesh, myOtherMesh]);
+```
+
 (look at the index.html file to see an usage example, or check the [github example repo] to see an npm usage example with Angular)
 
 
@@ -40,17 +45,18 @@ You can set different options like
 * rotation speed
 * zoom speed
 * min-max distance of the camera
-* mesh to rotate
+* mesh(s) to rotate
 * enable disable axis rotations
 * set max rotation angle
 
-
+Eg:
 ```
 - controls.setDistance(8, 200); // sets the min - max distance able to zoom
 - controls.setZoomSpeed(1); // sets the zoom speed ( 0.1 == slow, 1 == fast)
 - controls.disableZoom(); // disables zoom
 - controls.enableZoom(); // enables zoom
 - controls.setObjectToMove(newMesh); // changes the object to interact with
+- controls.setObjectToMove([mshBox,mshBox2]); // changes the objects to interact with
 - controls.setRotationSpeed(0.05); // sets a new rotation speed for desktop ( 0.1 == slow, 1 == fast)
 - controls.setRotationSpeedTouchDevices(value); // sets a new rotation speed for mobile
 - controls.enableVerticalRotation(); // enables the vertical rotation
@@ -66,6 +72,7 @@ You can set different options like
 
 ## Tips
 
+### TypeScript Gotchas
 In case of problems with ts types required by threejs in a typescript project do the following:
 1) go to the tsconfig.json file
 2) add skipLibCheck: true in "compilerOptions" object.
@@ -81,9 +88,12 @@ In case of problems with ts types required by threejs in a typescript project do
         ...
     }
 ```
+### Working with multiple meshes
+If more than one mesh is passed in as the object to move, all objects will stop move as soon as the first hits its rotation limit.
+
 
 ## Version
-1.2.6
+1.2.7
 
 ## License
 
