@@ -36,6 +36,8 @@ var controls = new ObjectControls(camera, renderer.domElement, [myMesh, myOtherM
 
 You can also change the mesh you want rotate! :tada:
 
+Auto rotation example is also included in the demo code.
+
 [view live example] and click the 'useMesh2' button on the right panel to interact with the second cube.  
 
 ### Options
@@ -67,6 +69,7 @@ Eg:
 - controls.setMaxHorizontalRotationAngle(R,R); // sets a max angle value for the horizontal rotation of the object
 - controls.disableMaxHorizontalAngleRotation(); // disables angle limits for horizontal rotation
 - controls.disableMaxVerticalAngleRotation(); // disables angle limits for vertical rotation
+- controls.isUserInteractionActive() //returns true if the user is interacting with the UI, false otherwise
 ```
 
 
@@ -93,7 +96,7 @@ If more than one mesh is passed in as the object to move, all objects will stop 
 
 
 ## Version
-1.2.7
+1.2.8
 
 ## License
 

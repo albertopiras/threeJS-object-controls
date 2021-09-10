@@ -158,6 +158,14 @@
         }
 
         function animate() {
+            /* Auto rotation usage example
+             * the auto rotation for mshBox2 is enabled if the user is not interacting or if the selected mesh is not mshBox2
+            */
+             if(!controls.isUserInteractionActive() || controls.getObjectToMove() != mshBox2){
+                //mshBox2 auto rotation
+                mshBox2.rotation.y += 0.01;
+            }
+
             requestAnimationFrame(animate);
             render();
         }
@@ -270,7 +278,6 @@
 
         init();
         animate();
-
         buildGui();
     </script>
 </body>

@@ -1,6 +1,6 @@
 /* --------------------------------------------------------
 ObjectControls
-version: 1.2.7
+version: 1.2.8
 author: Alberto Piras
 email: a.piras.ict@gmail.com
 github: https://github.com/albertopiras
@@ -24,6 +24,10 @@ function ObjectControls(camera, domElement, objectToMove) {
   this.setObjectToMove = function (newMesh) {
     mesh = newMesh;
   };
+
+  this.getObjectToMove = function() {
+    return mesh;
+  }
 
   /**
    * setZoomSpeed
@@ -104,6 +108,10 @@ function ObjectControls(camera, domElement, objectToMove) {
   this.enableZoom = function () {
     zoomEnabled = true;
   };
+
+  this.isUserInteractionActive = function(){
+    return isDragging;
+  }
 
   domElement = domElement !== undefined ? domElement : document;
 
