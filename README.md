@@ -62,7 +62,7 @@ Eg:
 - controls.setRotationSpeed(0.05); // sets a new rotation speed for desktop ( 0.1 == slow, 1 == fast)
 - controls.setRotationSpeedTouchDevices(value); // sets a new rotation speed for mobile
 - controls.enableVerticalRotation(); // enables the vertical rotation
-- constrols.disableVerticalRotation();  // disables the vertical rotation
+- controls.disableVerticalRotation();  // disables the vertical rotation
 - controls.enableHorizontalRotation(); // enables the horizontal rotation
 - controls.disableHorizontalRotation();// disables the horizontal rotation
 - controls.setMaxVerticalRotationAngle(Math.PI / 4, Math.PI / 4); // sets a max angle value for the vertical rotation of the object
